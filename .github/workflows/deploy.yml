@@ -27,24 +27,41 @@ jobs:
       - name: Tear down the Stack
         run:  docker-compose -f production.yml down
 
-  build_and_pub:
-    # Если тесты были пройдены успешно
+  # build_and_pub:
+  #   # Если тесты были пройдены успешно
+  #   needs: test_status
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v2
+
+  #     - name: Login to DockerHub Registry
+  #       run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
+      
+  #     - name: Build the Docker image
+  #       run: docker-compose -f production.yml build
+
+  #     - name: Push the Docker image to the registry
+  #       run: docker-compose -f production.yml push
+
+  deploy:
     needs: test_status
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-      #- uses: actions/checkout@master
-
-      - name: Login to DockerHub Registry
-        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
-      
-      - name: Build the Docker image
-        run: docker-compose -f production.yml build
-
-      - name: Push the Docker image to the registry
-        run: docker-compose -f production.yml push
-
+      - name: Docker up via SSH
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            cd /home/www/ActionTest/
+            docker-compose -f production.yml down
+            git pull
+            docker-compose -f production.yml build
+            docker-compose -f production.yml up -d
+          host: ${{ secrets.HOST }}
+          user: root
+          #key: ${{ secrets.PRIVATE_KEY}}
+          pass: ${{ secrets.SSH_PWD }}
+          #args: "-tt -vvv"
       # - name: Login to GitHub Container Registry
       #   uses: docker/login-action@v1
       #   with:
