@@ -1,4 +1,4 @@
-name: Publish on Docker Hub and Deploy
+name: Test HTTP status
 
 on:
   push:

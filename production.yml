@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/nginx/Dockerfile
-      image: ${{ secrets.DOCKER_LOGIN }}/${{ secrets.DOCKER_NAME }}:${GITHUB_REF:11}
+      image: baikovdev/nginx-test
     volumes:
       - "./app:/usr/share/nginx/html:ro"
     ports:
