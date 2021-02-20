@@ -1,0 +1,2 @@
+DOCKER_FILE_PATH=./compose/local/nginx
+LOCAL_VAR=test is ok!
