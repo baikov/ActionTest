@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/nginx/Dockerfile
-      image: baikovdev/nginx-test
+    image: baikovdev/nginx-test
     volumes:
       - "./app:/usr/share/nginx/html:ro"
     ports:
